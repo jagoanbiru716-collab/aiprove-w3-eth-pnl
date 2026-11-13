@@ -1,0 +1,30 @@
+=== eth-pnl-fixed — wallet 3 (ZephyrNode) — backtest transcript ===
+dataset: frozen ETH/USDT 1m bars, 1440 bars (Binance, 24h ending 2026-11-13 12:17 UTC)
+strategy: Bollinger breakout 80/2.1 + SMA(250) trend filter (see strategy.py)
+cost model: fill at open on position change; fee 0.10% + slippage 0.02% of notional; 1 ETH fixed
+
+--- run 1: strategy.py ---
+wrote positions.csv: 1440 rows, long bars=431, short bars=676, flat bars=333, fills=3
+
+--- run 1: backtest.py (default fee 0.10%) ---
+fee=0.10% slippage=0.02% -> net PnL=75.89 USDT  gross=87.80  costs=11.91  max DD=41.30  fills=3
+
+--- determinism check: regenerate positions to a second file and diff ---
+wrote positions_run2.csv: 1440 rows, long bars=431, short bars=676, flat bars=333, fills=3
+positions.csv identical across runs: YES
+fee=0.10% slippage=0.02% -> net PnL=75.89 USDT  gross=87.80  costs=11.91  max DD=41.30  fills=3
+
+--- fee sensitivity (same positions, slippage 0.02%) ---
+fee=0.00% slippage=0.02% -> net PnL=85.82 USDT  gross=87.80  costs=1.98  max DD=39.94  fills=3
+fee=0.05% slippage=0.02% -> net PnL=80.85 USDT  gross=87.80  costs=6.95  max DD=39.94  fills=3
+fee=0.10% slippage=0.02% -> net PnL=75.89 USDT  gross=87.80  costs=11.91  max DD=41.30  fills=3
+fee=0.20% slippage=0.02% -> net PnL=65.97 USDT  gross=87.80  costs=21.83  max DD=45.18  fills=3
+
+--- split-half check (chosen strategy) ---
+first half (bars 0-719):  net PnL=-16.59 USDT
+second half (bars 720-1439): net PnL=90.06 USDT
+
+--- fills (position changes) ---
+minute 333: +0 -> +1 @ open 2017.57
+minute 598: +1 -> -1 @ open 2012.57
+minute 1274: -1 -> +1 @ open 1940.69
